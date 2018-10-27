@@ -1,0 +1,82 @@
+-------------------------------INTRODUCCION-----------------------------------
+Este es el core de calculo que fue inicialmente programado por mario marin
+
+actualmente el core tiene las siguientes capacidades:
+	-	cadenas de markov discretas
+	-	cadenas de markov continuas
+		- aproximadas con delta_t
+		- aproximadas con el metodo con matriz Q (como visto en clases tiene problemas numericos al ser implementado)
+		- aproximadas con el metodo con matriz P (en teoria deveria dar la aproximacion mas real, pero en estos momentos no se encuentra operativo)
+
+
+-------------------------------OUTPUTS----------------------------------------
+los resultados de todas las simulaciones son guardados en un archivo denominado "results.txt"
+estos resultados contienen todas las variables aleatorias estocasticas generadas, a continuacion un pequeño extracto:
+
+1 0 0 0
+0 0.5 0 0.5
+0.5 0.25 0.15 0.1
+0.25 0.33 0.135 0.285
+0.33 0.2945 0.18 0.1955
+0.2945 0.29875 0.18465 0.2221
+0.29875 0.29523 0.195885 0.210135
+0.29523 0.29362 0.20016 0.210991
+0.29362 0.293142 0.203409 0.209829
+0.293142 0.292406 0.205335 0.209116
+0.292406 0.292196 0.20647 0.208928
+0.292196 0.291961 0.207207 0.208636
+0.291961 0.291857 0.207636 0.208546
+0.291857 0.291781 0.207909 0.208453
+
+el archivo se decodifica de la siguiente manera:
+	- cada columna corresponde a un estado de mi cadena partiendo del 0 (en el ejemplo tenemos 4 estados)
+	- cada fila corresponde a una variable aleatoria estocastica indicando la provabilidad de estar en ese estado en el moento indicado (este dependera de si es continuo o discreto)
+
+TENER EN CUENTA QUE SIN IMPORTAR QUE TIPO DE SIMULACION SE EJECUTE TODOS LOS RESULTADOS TIENEN EL MISMO FORMATO
+
+-------------------------------INPUTS----------------------------------------
+
+los inputs requeridos por el software son los siguientes:
+
+	- tiempo de parada (este corresponde a un numero entero si la cadena es discreta, de ser continua corresponde a el tiempo de parada)
+	- ruta cadena de markov (la ruta de la cadena, explicada en el siguiete seccion)
+	- flag continuo (este flag true/false indica si la cadena provista es continua o discreta)
+	-------parametros solo para el caso continup----------
+		- delta_t (los delta_t que habran entre el tiempo 0 y el tiempo de parada) 
+		- q_matrix (este flag true/false indica si se deveria calcular con el metodo Q matrix)
+		- p_matrix (este flag true/false indica si se deveria calcular con el metodo P matrix)
+		OBS: en el caso de que q_matrix y p_matrix sean false esto indica que se utilizara el metodo aproximado no matrisial (el primero que vimos)
+
+ACTUALMENTE LOS PARAMETROS DEVEN SER INGRESADOS EN EL ORDEN INDICADO, SI ESTOS SON INGRESADOS DE FORMA INCORRECTA EL CORE CRASHEARA
+
+archivo cadena de markov:
+este archivo contiene la cadena de markov que el simulador utilizara a continuacion tenemos un archivo de configuracion de ejemplo:
+
+4
+1 0 0 0
+-------------------
+0 1 0.5
+0 3 0.5
+1 0 1
+2 1 0.2
+2 2 0.7
+2 3 0.1
+3 1 0.5
+3 2 0.3
+3 3 0.2
+
+-	la primera fila del archivo indica cuantos estados posee la cadena, esto se utiliza para efectos de inicializasion
+-	la segunda fila contiene el vector inicial pi(0)
+-	la tersera fila es simplemente una fila separadora, puede contener cualquier tipo de caracter de cualquier largo, es importante no introducir informacion en esta fila por q el core la ignora
+-	las siguientes filas contienen las relaciones entre estados (tanto tazas como probabilidades dependiendo si es discreta o continua), estas relaciones operan de la siguiente manera:
+								Estado Origen------> 3 1 0.5 <-------probabilidad o taza	
+													   ^
+													   |
+													   |
+												Estado Destino
+
+OBS: EL ARCHIVO TERMINA SIEMPRE CON DATOS, SI SE INTRDUCE UNA LINEA VACIA EN EL ARCHIVO EL CORE CRASEHARA
+
+
+
+
