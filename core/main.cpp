@@ -20,12 +20,25 @@ void pi_n(vector<vector<double>> init_vector,vector<vector<double>> p_matrix,int
 }
 
 double p_n(int n, double time, double lambda){
+/*
+    if(n==100){
+        cout<<"------------------"<<endl;
+        cout<<lambda<<endl;
+        cout<<time<<endl;
+        cout<<"------------------"<<endl;
+    }
+*/
     double e = 2.7182818284590452353602874;
     double lambda_time = (lambda*time);
     double p_previous = pow(e,-(lambda_time));
     double p = p_previous;
-    for(int i = 0; i < n; i++){
-        p = (lambda_time/n)*p_previous;
+    for(int i = 1; i < n; i++){
+        /*
+        if(n==100){
+            cout<<i-1 <<" -> " <<p<<endl;
+        }
+*/
+        p = (lambda_time/i)*p_previous;
         p_previous = p;
     }
     return p;
@@ -214,7 +227,7 @@ int main(int argc, char *argv[])
                 time = x*delta_t + delta_t;
                 temp_number = 0;
 
-                for ( int n=0;n<10;n++) {
+                for ( int n=0;n<101;n++) {
                     temp_number = p_n(n,time,lambda);
                     pi_n(init_vector_matrix,matrix,n,q_matrix_1);
                     matrix_mult_scalar(q_matrix_1,temp_number,q_matrix_2);

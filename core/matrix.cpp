@@ -3,15 +3,26 @@
 
 using namespace std;
 
+void init_zeros(unsigned int size,vector<vector<double>> & out){
+    out.resize(size);
+    for(unsigned int i=0;i < size;i++){
+        out[i].resize(size);
+        for(unsigned int j=0;j < size;j++){
+            out[i][j] = 0.0;
+        }
+    }
+}
+
+
 void matrix_mult(vector<vector<double>> A, vector<vector<double>> B,vector<vector<double>> & out){ //solo para matrises validas
     unsigned long size_matrix_rows = A[0].size();
     unsigned long size_matrix_columns = A.size();
+
     out.resize(size_matrix_columns);
 
     for (unsigned long i=0;i < size_matrix_columns; i++) {
         out[i].resize(size_matrix_rows);
     }
-
     double sum = 0;
     for(unsigned long i=0; i < size_matrix_columns; i++){
         for(unsigned long j=0; j < size_matrix_rows; j++){
@@ -20,15 +31,6 @@ void matrix_mult(vector<vector<double>> A, vector<vector<double>> B,vector<vecto
                 sum = sum + A[i][w]*B[w][j];
             }
             out[i][j] = sum;
-        }
-    }
-}
-void init_zeros(unsigned int size,vector<vector<double>> & out){
-    out.resize(size);
-    for(unsigned int i=0;i < size;i++){
-        out[i].resize(size);
-        for(unsigned int j=0;j < size;j++){
-            out[i][j] = 0.0;
         }
     }
 }
