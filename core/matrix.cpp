@@ -49,28 +49,6 @@ void init_unitary(unsigned int size,vector<vector<double>> & out){
     }
 }
 
-void matrix_pow(vector<vector<double>> A, int power,vector<vector<double>> & out){ //solo para matrises validas
-    unsigned long size_matrix = A.size();
-
-    vector<vector<double>> temp = A;
-    vector<vector<double>> temp_next;
-
-    if(power == 0){
-        init_zeros(size_matrix,out);
-        for (unsigned long i=0;i < size_matrix; i++) {
-            out[i][i] = 1;
-        }
-    }else if(power == 1){
-        out = A;
-    }else{
-        for(int i=1; i < power; i++){
-            matrix_mult(temp,A,temp_next);
-            temp = temp_next;
-        }
-        out = temp;
-    }
-}
-
 void matrix_sum(vector<vector<double>> A, vector<vector<double>> B,vector<vector<double>> & out){ //solo para matrises validas
     unsigned long size_matrix_rows = A[0].size();
     unsigned long size_matrix_columns = A.size();

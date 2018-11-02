@@ -9,41 +9,6 @@
 
 using namespace std;
 
-
-void pi_n(vector<vector<double>> init_vector, vector<vector<double>> p_matrix, int n, vector<vector<double>> & output) {
-    vector<vector<double>> temp = init_vector;
-
-    for (int i = 0; i < n; i++) {
-        matrix_mult(temp, p_matrix, temp);
-    }
-    output = temp;
-}
-
-double p_n(int n, double time, double lambda) {
-/*
-    if (n==100) {
-        cout<<"------------------"<<endl;
-        cout<<lambda<<endl;
-        cout<<time<<endl;
-        cout<<"------------------"<<endl;
-    }
-*/
-    double e = 2.7182818284590452353602874;
-    double lambda_time = (lambda*time);
-    double p_previous = pow(e, -(lambda_time));
-    double p = p_previous;
-    for (int i = 1; i < n; i++) {
-        /*
-        if (n==100) {
-            cout<<i-1 <<" -> " <<p<<endl;
-        }
-*/
-        p = (lambda_time/i)*p_previous;
-        p_previous = p;
-    }
-    return p;
-}
-
 int main(int argc, char *argv[])
 {
     double tmp_target = atof(argv[1]);
@@ -230,7 +195,7 @@ int main(int argc, char *argv[])
 
                 matrix_mult_scalar(matrix, time*lambda, q_matrix_1);
 
-                exponential = p_n(0, time, lambda);
+                exponential = exp(-lambda*time);
                 matrix_mult_scalar(q_sum_term, exponential, q_sum_term);
                 matrix_sum(q_sum_term, q_sum, q_sum);
                 for (int n=1; n<101; n++) {
