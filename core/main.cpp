@@ -178,13 +178,13 @@ int main(int argc, char *argv[])
     double time = 0;
     double fact;
     vector<vector<double>> q_sum;
-    init_zeros(number_of_states, q_sum);
+    vector<vector<double>> q_sum_term;
+    vector<vector<double>> q_sum_term_tmp;
     vector<vector<double>> q_matrix_1 = matrix;
-    vector<vector<double>> q_matrix_2;
     vector<vector<double>> q_matrix_out;
 
     //exclusibe P
-    double temp_number;
+    double exponential;
 
     //-------------------------------
     ofstream output("./result.txt");
@@ -199,8 +199,9 @@ int main(int argc, char *argv[])
         for (int x=0; x < target; x++) { //iteraciones hasta "n"
             actual.clear();
             init_zeros(number_of_states, q_sum);
+            init_unitary(number_of_states, q_sum_term);
+            init_zeros(number_of_states, q_sum_term_tmp);
             init_zeros(number_of_states, q_matrix_1);
-            init_zeros(number_of_states, q_matrix_2);
             for (unsigned int j=0; j < number_of_states; j++) { //inicializacion vector actual
                 actual.push_back(0.0);
             }
@@ -209,13 +210,14 @@ int main(int argc, char *argv[])
             if (q_matrix_flag=="true") {
                 time = x*delta_t + delta_t;
 
+                matrix_mult_scalar(matrix, time, q_matrix_1);
+
+                matrix_sum(q_sum_term, q_sum, q_sum);
                 //sum
-                for (int n=0; n<10; n++) {
-                    matrix_mult_scalar(matrix, time, q_matrix_2);
-                    matrix_pow(q_matrix_2, n, q_matrix_1);
-                    fact = factorial(n);
-                    matrix_mult_scalar(q_matrix_1, 1.0/fact, q_matrix_2);
-                    matrix_sum(q_matrix_2, q_sum, q_sum);
+                for (int n=1; n<10; n++) {
+                    matrix_mult(q_sum_term, q_matrix_1, q_sum_term_tmp);
+                    matrix_mult_scalar(q_sum_term_tmp, 1.0/n, q_sum_term);
+                    matrix_sum(q_sum_term, q_sum, q_sum);
                 }
                 matrix_mult(init_vector_matrix, q_sum, q_matrix_out);
 
@@ -225,16 +227,21 @@ int main(int argc, char *argv[])
 
             } else if (p_matrix_flag=="true") {
                 time = x*delta_t + delta_t;
-                temp_number = 0;
 
-                for (int n=0; n<101; n++) {
-                    temp_number = p_n(n, time, lambda);
-                    pi_n(init_vector_matrix, matrix, n, q_matrix_1);
-                    matrix_mult_scalar(q_matrix_1, temp_number, q_matrix_2);
-                    matrix_sum(q_matrix_2, q_sum, q_sum);
+                matrix_mult_scalar(matrix, time*lambda, q_matrix_1);
+
+                exponential = p_n(0, time, lambda);
+                matrix_mult_scalar(q_sum_term, exponential, q_sum_term);
+                matrix_sum(q_sum_term, q_sum, q_sum);
+                for (int n=1; n<101; n++) {
+                    matrix_mult(q_sum_term, q_matrix_1, q_sum_term_tmp);
+                    matrix_mult_scalar(q_sum_term_tmp, 1.0/n, q_sum_term);
+                    matrix_sum(q_sum_term, q_sum, q_sum);
                 }
+                matrix_mult(init_vector_matrix, q_sum, q_matrix_out);
+
                 for (unsigned int index=0; index < number_of_states; index++) {
-                    actual[index] = q_sum[0][index];
+                    actual[index] = q_matrix_out[0][index];
                 }
             } else { //calculo de forma en apuntes
                 for (unsigned int j=0; j < number_of_states; j++) {
