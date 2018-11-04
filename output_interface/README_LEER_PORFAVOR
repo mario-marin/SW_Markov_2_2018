@@ -1,0 +1,10 @@
+Leer:
+
+El output que hemos avanzado con Campuzano es una api, la cual esta hecha para arreglos de 8 filas por 12 columnas.
+Editamos el constructor para que este pueda recibir el arreglo (cosa que no era posible antes, además de editar otros aspectos
+visuales) al momento de crear el objeto 'gráfico' pero lo dejamos aún 8x12. 
+El siguiente paso a seguir es generalizar pars que pueda leer datos de NxM y graficarlos.
+
+La forma en que se lee los datos es
+8 Filas que representan los estados, es decir filas->estados.
+12 columnas son los n, es decir columnas->tiempo discreto (n).
