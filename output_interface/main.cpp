@@ -16,194 +16,35 @@
 
 using namespace std;
 using namespace QtDataVisualization;
-//float gffg[8][12];
 
 
-//funcion que crea la matriz de transicion con las pij respectivas de CMPD
-void llena_matriz_pij(vector <vector<float>> &vector1){
-    vector< vector<float> >::iterator y;
-    vector<float>::iterator x;
-    for (y = vector1.begin(); y != vector1.end(); y++) {
-        float sum = 0;
-        for (x = y->begin(); x != y->end(); x++) {
-            //*x=1;
-            float random = lcgrand(50);
-            sum=sum+random;
-            *x=random;
-            }
-        for (x = y->begin(); x != y->end(); x++){
-            *x=*x/sum;
-        }
-    }
 
-}
+void imprime_arr(float (&arr)[8][12]);
+//Funcion para imprimir un arreglo de 8 filas con 12 col
 
-//funcion crea la matriz de lambdas, cualquieras
-void llena_matriz_lambdas(vector <vector<float>> &vector1, int n_e){
-    for (int ii=0;ii<n_e;++ii){
-        for(int jj=0;jj<n_e;++jj){
-            if(ii==jj){
-                vector1[ii][jj]=0;
-            }
-            else{
-                float random=lcgrand(50)*100;
-                vector1[ii][jj]=random;
-            }
-        }
-    }
-
-
-}
-
-void matriz_delta_t(vector <vector<float>> &vector1, float delta_t, int n_e){
-    float aux;
-    for (int ii=0;ii<n_e;++ii){
-        aux=0;
-        for(int jj=0;jj<n_e;++jj){
-                   vector1[ii][jj]=vector1[ii][jj]*delta_t;
-                   aux=aux+vector1[ii][jj];
-        }
-        vector1[ii][ii]=1-aux;
-    }
-}
-
-void imprime_vector_doble(vector <vector<float>> &vector1){
-    vector< vector<float> >::iterator fila;
-    vector<float>::iterator col;
-    for (fila = vector1.begin(); fila != vector1.end(); fila++) {
-        for (col = fila->begin(); col != fila->end(); col++) {
-            cout<<*col<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl;
-    return;
-}
-
-float prob_ij(vector <vector<float>> &vector1, int n_e, int n, int i, int e_i, float (&arr)[8][12]){
-    float aux = 0;
-    if(n==0 && i==e_i){
-        return 1;
-    }
-    else if (n==0 && i!=e_i){
-        return 0;
-    }
-    else{
-        for(int jj = 0; jj<n_e;++jj){
-            aux = aux + prob_ij(vector1, n_e, n-1, jj, e_i, arr)*(vector1[jj][i]);
-            //cout<<aux<<" j: "<<jj<<" n: "<<n<<endl;
-        }
-
-
-               // cout<<"n: "<<n<<" i: "<<i<<" prob, aux: "<<aux<<endl;
-
-}
-
-        arr[i][n]=aux;
-        return aux;
-    }
-
-
-/*float prob_ij2(vector <vector<float>> &vector1, int n_e, int n, int i, int e_i, float (&arr)[8][12]){
-    float aux = 0;
-    if(n==0 && i==e_i){
-        return 1;
-    }
-    else if (n==0 && i!=e_i){
-        return 0;
-    }
-    else if(n!=1){
-        for(int jj = 0; jj<n_e;++jj){
-            aux = aux + prob_ij(vector1, n_e, n-1, jj, e_i)*(vector1[jj][i]);
-        }
-    }
-        else{
-            aux=(n_e+1)*prob_ij(vector1, n_e, n-1, i, e_i)*(vector1[0][i]);
-        }
-    arr[i][n] = aux;
-    cout<<"n: "<<n<<" i: "<<i<<" prob, aux: "<<aux<<endl;
-    return aux;
-    }
-*/
-
-void test_edit(float (&arr)[8][12]){
-    //cout<<endl;
-    for (int i=0;i<8;++i){
-        for(int j=0;j<12;j++){
-            if(arr[i][j]<0.0001 || arr[i][j]>1)
-            arr[i][j]=0;
-        }
-
-    //cout<<endl;
-    }
-
-}
-
-void imprime_arr(float (&arr)[8][12]){
-    cout<<endl;
-    for (int i=0;i<8;++i){
-        for(int j=0;j<12;j++){
-            cout<<arr[i][j]<<" ";
-        }
-    cout<<endl;
-    }
-
-}
-
+void vec_to_arr(vector<vector<float> > &vec, float (&arr)[8][12]);
+//Funcion para copiar los datos de un vector [8][12] a un arreglo de [8][12]
 
 int main(int argc, char **argv)
 {
 
+    float arrf[8][12]={{0}}; //inicializacion de un vector de [8][1] con 0s
 
+    std::vector<std::vector<float>> aux_vec(8, std::vector<float>(12, 0));
 
+    //llenado manual de el vector 2D con valores reales, (resultados de mm)
+    aux_vec[0]={1, 0, 0.5, 0.25, 0.33, 0.2945, 0.29875, 0.29523, 0.29362, 0.293142, 0.292406, 0.292196};
+    aux_vec[1]={0, 0.5, 0.25, 0.33, 0.2945 ,0.29875, 0.29523, 0.29362, 0.293142, 0.292406, 0.292196, 0.291961};
+    aux_vec[2]={0, 0, 0.15, 0.135, 0.18, 0.18465, 0.195885, 0.20016, 0.203409, 0.205335, 0.20647, 0.207207};
+    aux_vec[3]={0, 0.5, 0.1, 0.285, 0.1955, 0.2221, 0.210135, 0.210991, 0.209829, 0.209116, 0.208928, 0.208636};
+    aux_vec[4]={0,0,0,0,0,0,0,0,0,0,0,0};
+    aux_vec[5]={0,0,0,0,0,0,0,0,0,0,0,0};
+    aux_vec[6]={0,0,0,0,0,0,0,0,0,0,0,0};
+    aux_vec[7]={0,0,0,0,0,0,0,0,0,0,0,0};
 
-
-    int numero_estados = 4;
-    int n = 12;
-    int target = 2;
-    int estado_inicial = 0;
-    float deltat = 0.001;
-    //x estados, pero la matriz se inicia del 0 al x-1
-    vector< vector<float> >matriz_transicion(numero_estados, vector<float>(numero_estados));
-    vector< vector<float> >matriz_lambdas(numero_estados, vector<float>(numero_estados));
-
-    vector< vector<float> >matriz_transicion_manual{{0.1,0.4,0.1,0.4},{0.1,0.3,0.5,0.1},{0.3,0.1,0.4,0.2},{0.4,0.3,0.1,0.2}};
-
-
-    llena_matriz_pij(matriz_transicion);
-    imprime_vector_doble(matriz_transicion);
-    imprime_vector_doble(matriz_transicion_manual);
-
-    float arrf[8][12];
-
-
-
-
-    //float prob1 = prob_ij(matriz_transicion,numero_estados,n,target,estado_inicial, arrf);
-    float prob11=prob_ij(matriz_transicion_manual,numero_estados,n,target,estado_inicial, arrf);
-
-    test_edit(arrf);
+    //vec_to_arr(aux_vec,(float *)arrf);
+    vec_to_arr(aux_vec, arrf);
     imprime_arr(arrf);
-
-    //float prob2 = prob_ij2(matriz_transicion,numero_estados,n,target,estado_inicial, arrf);
-    //cout<<"fc1: "<<prob1<<" "<<endl;
-    //cout<<"fc2: "<<prob2<<endl;
-    //f2; prob_ij2 es mas rapida ssi n>>>numero de estados, sino es mas lenta o lo mismo
-
-    //imprime_arr(arrf);
-
-    //test(matriz_transicion,numero_estados);
-
-    //llena_matriz_lambdas(matriz_lambdas,numero_estados);
-    //imprime_vector_doble(matriz_lambdas);
-    //cout<<endl;
-    //matriz_delta_t(matriz_lambdas,deltat,numero_estados);
-    //imprime_vector_doble(matriz_lambdas);
-
-
-
-
-
 
 
 
@@ -415,7 +256,7 @@ int main(int argc, char **argv)
     vLayout->addWidget(new QLabel(QStringLiteral("Axis label rotation")));
     vLayout->addWidget(axisLabelRotationSlider, 1, Qt::AlignTop);
 
-    GraphModifier *modifier = new GraphModifier(widgetgraph, arrf);
+    GraphModifier *modifier = new GraphModifier(widgetgraph, arrf);  //constructor que recibe el arreglo de datos
 
     QObject::connect(rotationSliderX, &QSlider::valueChanged, modifier, &GraphModifier::rotateX);
     QObject::connect(rotationSliderY, &QSlider::valueChanged, modifier, &GraphModifier::rotateY);
@@ -483,4 +324,27 @@ int main(int argc, char **argv)
                      &GraphModifier::changeLabelRotation);
     widget->show();
     return app.exec();
+}
+
+
+void imprime_arr(float (&arr)[8][12]){
+    cout<<endl;
+    for (int i=0;i<8;++i){
+        for(int j=0;j<12;j++){
+            cout<<arr[i][j]<<" ";
+        }
+    cout<<endl;
+    }
+
+}
+
+void vec_to_arr(vector<vector<float> > &vec, float (&arr)[8][12]){
+
+    for (int i=0;i<8;++i){
+        for(int j=0;j<12;j++){
+            arr[i][j]=vec[i][j];
+        }
+
+    }
+
 }
