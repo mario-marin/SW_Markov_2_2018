@@ -1,0 +1,1 @@
+El input recibe la cantidad de estados y genera una tabla, esta se puede rellenar de forma random o con ingreso manual. El boton calcular al ser presionado genera el archivo input.txt, de la forma necesaria para que opere el core, ademas es capaz de ejecutar la funcion que realiza los calculos del core (la cual no se cual es o como operarla) con todos los parametros necesarios.
